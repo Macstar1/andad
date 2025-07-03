@@ -49,7 +49,7 @@ class DependencyContainer(
         .addInterceptor { chain ->
             appAuth.authStateFlow.value.token?.let { token ->
                 val newRequest = chain.request().newBuilder()
-                    .addHeader("Autorization", token)
+                    .addHeader("Autрorization", token)
                     .build()
                 return@addInterceptor chain.proceed(newRequest)
             }
