@@ -22,7 +22,7 @@ import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
-    private val dependencyContainer = DependencyContainer.getInstance()
+    private val dependencyContainer = DependencyContainer.getInstance(requireContext())
     private val viewModel: PostViewModel by activityViewModels(
         factoryProducer = {
             ViewModelFactory(

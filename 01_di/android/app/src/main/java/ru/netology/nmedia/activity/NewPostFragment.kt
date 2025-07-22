@@ -27,7 +27,7 @@ class NewPostFragment : Fragment() {
         var Bundle.textArg: String? by StringArg
     }
 
-    private val dependencyContainer = DependencyContainer.getInstance()
+    private val dependencyContainer = DependencyContainer.getInstance(requireContext())
 
     private val viewModel: PostViewModel by activityViewModels(
         factoryProducer = {

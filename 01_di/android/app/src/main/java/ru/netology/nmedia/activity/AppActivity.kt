@@ -29,7 +29,7 @@ import javax.inject.Inject
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
     @Inject
     lateinit var auth: AppAuth
-    private var dependencyContainer = DependencyContainer.getInstance()
+    private var dependencyContainer = DependencyContainer.getInstance(this)
     private val viewModel: AuthViewModel by viewModels(
         factoryProducer = {
             ViewModelFactory(

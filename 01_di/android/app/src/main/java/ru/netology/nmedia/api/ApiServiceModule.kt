@@ -13,9 +13,6 @@ object ApiServiceModule {
     @Provides
     @Singleton
     fun provideApiService(): ApiService {
-        // Воспользуйтесь уже настроенным retrofit из DependencyContainer или создайте новый
-        // Предположим, что ты используешь DependencyContainer для получения retrofit
-        // Тогда:
         return DependencyContainer.instance!!.retrofit.create(ApiService::class.java)
     }
 }

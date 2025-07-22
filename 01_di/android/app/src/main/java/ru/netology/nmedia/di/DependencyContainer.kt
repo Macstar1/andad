@@ -16,7 +16,7 @@ import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 
-class DependencyContainer(
+class DependencyContainer private constructor(
     private val context: Context
 ) {
     companion object {
@@ -27,11 +27,11 @@ class DependencyContainer(
             instance = instance ?: DependencyContainer(context)
         }
 
-        fun getInstance(): DependencyContainer {
-            return instance!!
-        }
+        fun getInstance(context: Context): DependencyContainer =
+            instance ?: synchronized(this) {
+                instance ?: DependencyContainer(context).also { instance = it }
+            }
     }
-
 
     private val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
 
