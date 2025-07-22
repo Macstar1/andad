@@ -17,7 +17,7 @@ class ViewModelFactory(
                 PostViewModel(repository, appAuth) as T
             }
 
-            modelClass.isAssignableFrom(PostViewModel::class.java) -> {
+            modelClass.isAssignableFrom(AuthViewModel::class.java) -> {
                 AuthViewModel(appAuth) as T
             }
 
