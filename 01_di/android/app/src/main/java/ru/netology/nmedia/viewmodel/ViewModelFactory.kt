@@ -16,11 +16,9 @@ class ViewModelFactory(
             modelClass.isAssignableFrom(PostViewModel::class.java) -> {
                 PostViewModel(repository, appAuth) as T
             }
-
-            modelClass.isAssignableFrom(PostViewModel::class.java) -> {
+            modelClass.isAssignableFrom(AuthViewModel::class.java) -> {
                 AuthViewModel(appAuth) as T
             }
-
             else -> error("Unknown class: $modelClass")
         }
 

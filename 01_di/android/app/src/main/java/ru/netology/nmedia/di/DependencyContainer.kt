@@ -21,14 +21,20 @@ class DependencyContainer(
 ) {
     companion object {
         @Volatile
-        var instance: DependencyContainer? = null
+        private var instance: DependencyContainer? = null
 
         fun initApp(context: Context) {
-            instance = instance ?: DependencyContainer(context)
+            if (instance == null) {
+                synchronized(this) {
+                    if (instance == null) {
+                        instance = DependencyContainer(context)
+                    }
+                }
+            }
         }
 
         fun getInstance(): DependencyContainer {
-            return instance!!
+            return instance ?: throw IllegalStateException("DependencyContainer is not initialized. Call initApp() first.")
         }
     }
 
@@ -49,7 +55,7 @@ class DependencyContainer(
         .addInterceptor { chain ->
             appAuth.authStateFlow.value.token?.let { token ->
                 val newRequest = chain.request().newBuilder()
-                    .addHeader("Autрorization", token)
+                    .addHeader("Autorization", token)
                     .build()
                 return@addInterceptor chain.proceed(newRequest)
             }
