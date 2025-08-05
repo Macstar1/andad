@@ -13,13 +13,13 @@ fun loggingInterceptor() = HttpLoggingInterceptor()
         }
     }
 
-fun authInterceptor(auth: AppAuth) = fun(chain: Interceptor.Chain): Response {
-    auth.authStateFlow.value.token?.let { token ->
-        val newRequest = chain.request().newBuilder()
-            .addHeader("Authorization", token)
-            .build()
-        return chain.proceed(newRequest)
+fun authInterceptor(auth: AppAuth): Interceptor = Interceptor { chain ->
+    val token = auth.authStateFlow.value.token
+    val requestBuilder = chain.request().newBuilder()
+    if (!token.isNullOrBlank()) {
+        requestBuilder.addHeader("Authorization", "Bearer $token")
     }
-
-    return chain.proceed(chain.request())
+    chain.proceed(requestBuilder.build())
 }
+
+

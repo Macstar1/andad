@@ -11,6 +11,8 @@ import retrofit2.create
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.BuildConfig.BASE_URL
 import ru.netology.nmedia.api.ApiService
+import ru.netology.nmedia.api.authInterceptor
+import ru.netology.nmedia.api.loggingInterceptor
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.repository.PostRepository
@@ -49,19 +51,23 @@ class DependencyContainer(
     }
 
     val appAuth = AppAuth(context)
-
-    private val okhttp = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .addInterceptor { chain ->
-            appAuth.authStateFlow.value.token?.let { token ->
-                val newRequest = chain.request().newBuilder()
-                    .addHeader("Autorization", token)
-                    .build()
-                return@addInterceptor chain.proceed(newRequest)
-            }
-            chain.proceed(chain.request())
-        }
+    val okHttp = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor())
+        .addInterceptor(authInterceptor(appAuth))
         .build()
+
+//    private val okhttp = OkHttpClient.Builder()
+//        .addInterceptor(logging)
+//        .addInterceptor { chain ->
+//            appAuth.authStateFlow.value.token?.let { token ->
+//                val newRequest = chain.request().newBuilder()
+//                    .addHeader("Autorization", token)
+//                    .build()
+//                return@addInterceptor chain.proceed(newRequest)
+//            }
+//            chain.proceed(chain.request())
+//        }
+//        .build()
 //
 //    fun okhttp(vararg interceptors: Interceptor): OkHttpClient = OkHttpClient.Builder()
 //        .apply {
@@ -74,7 +80,7 @@ class DependencyContainer(
     val retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BASE_URL)
-        .client(okhttp)
+        .client(okHttp)
         .build()
 
     private val appBd = Room.databaseBuilder(context, AppDb::class.java, "app.db")
